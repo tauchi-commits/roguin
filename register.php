@@ -9,7 +9,6 @@ $password=$_POST['password'];
 
 
 if (preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{5,100}+\z/i', $_POST['password'])) {
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   } else {
     $erros[]= 'パスワードは半角英数字をそれぞれ1文字以上含んだ5文字以上で設定してください。';
   }
@@ -32,7 +31,7 @@ try {
      $stmt = $pdo->prepare("INSERT INTO userdeta(name, password) VALUES (?, ?)");
      $stmt->execute(array($username, password_hash($password, PASSWORD_DEFAULT)));
      $userid= $pdo->lastinsertid();
-     $signUpMessage='登録が完了しました。あなたの登録IDは '. $userid. ' です。passwordは '. $_POST['password']. ' です。';  // ログイン時に使用する名前とパスワード
+     $signUpMessage = '登録が完了しました。あなたの登録IDは '. $userid. ' です。パスワードは '.$_POST['password']. ' です。';  // ログイン時に使用するIDとパスワード
 } catch (PDOException $e) {
     exit('データベース接続失敗 ' . $e->getMessage());
 }
@@ -42,10 +41,15 @@ try {
 <head>
 <meta charset="utf-8">
 <title>ログイン画面</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link  href="assets/css/style.css"  rel="stylesheet" media="all"  />
 
 </head>
 <body>
-<?=htmlspecialchars($signUpMessage, ENT_QUOTES);?>
+<p class="signUp"><?=htmlspecialchars($signUpMessage, ENT_QUOTES);?></p>
 <a href=signUp.php>戻る</a>
 </body>
 </html>
