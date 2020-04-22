@@ -9,12 +9,12 @@ $db_name ='userDeta';// データベース名
 $db_user ='user';      // データベースのユーザー名
 $db_pass ='password';// データベースのパスワード
 $userid=$_POST['userid'];
-$password=$_POST['password'];
+
 
 if (empty($userid)){  // 値が空のとき
   $erross[]='ユーザーIDが未入力です。';
 }
-if (empty($password)){ // 値が空のとき
+if (empty($_POST['password'])){ // 値が空のとき
   $erross[]='passwordが未入力です。';
 }
 try {
@@ -22,10 +22,11 @@ try {
     $stmt = $pdo->prepare('SELECT * FROM userdeta WHERE id = ?');
     $stmt->execute(array($userid));
     $row = $stmt->fetch(PDO::FETCH_ASSOC);//fetch(PDO::FETCH_ASSOC)は連想配列で行を取り出す
-    if ( password_verify($password, $row['password'] )) {
+    if (password_verify($_POST['password'], $row['password'])) {
         session_regenerate_id(true);
         $_SESSION['name']=$row['name']; // 入力したIDのユーザー名を取得
-        echo "ログインに成功しました";
+       header('Location: Don.php');
+        exit;
     }else{
       $erross[]="ログインに失敗しました";
     }
